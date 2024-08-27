@@ -1,7 +1,3 @@
-Here's a `README.md` file for your WordPress plugin project:
-
----
-
 # WP URL Shortener Rotator
 
 **Version:** 1.0  
