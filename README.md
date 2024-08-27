@@ -5,7 +5,7 @@ Here's a `README.md` file for your WordPress plugin project:
 # WP URL Shortener Rotator
 
 **Version:** 1.0  
-**Author:** Your Name  
+**Author:** Mr_godfather9  
 **License:** GPLv2 or later
 
 ## Description
