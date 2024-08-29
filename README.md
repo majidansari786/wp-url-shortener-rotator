@@ -1,6 +1,6 @@
 # WP URL Shortener Rotator
 
-**Version:** 1.0  
+**Version:** 1.5
 **Author:** Mr_godfather9  
 **License:** GPLv2 or later
 
