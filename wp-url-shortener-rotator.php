@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WP URL Shortener Rotator
  * Description: Automatically shortens post links using multiple custom shorteners and rotates the shortened links on user clicks.
- * Version: 1.0
+ * Version: 1.5
  * Author: Mr_godfather9
  */
 
@@ -12,6 +12,12 @@ if (!defined('ABSPATH')) {
 
 // Include necessary files
 require_once plugin_dir_path(__FILE__) . 'includes/class-url-shortener.php';
+
+// Enqueue admin styles
+add_action('admin_enqueue_scripts', 'wp_url_shortener_rotator_admin_styles');
+function wp_url_shortener_rotator_admin_styles() {
+    wp_enqueue_style('wp-url-shortener-rotator-admin', plugin_dir_url(__FILE__) . 'assets/css/admin-styles.css');
+}
 
 // Activation hook to create the database table
 register_activation_hook(__FILE__, 'wp_url_shortener_rotator_install');
@@ -41,7 +47,7 @@ function wp_url_shortener_rotator_settings_page() {
             <?php
             settings_fields('wp_url_shortener_rotator_options');
             do_settings_sections('wp-url-shortener-settings');
-            submit_button();
+            submit_button('Save Settings');
             ?>
         </form>
     </div>
@@ -122,8 +128,13 @@ function append_shortened_links($content) {
 
     if (!empty($urls)) {
         foreach ($urls as $url) {
-            // Shorten the URL using both shorteners and get the short code
-            $short_code = $url_shortener->shorten_url($url);
+            // Check if the URL is already shortened and cached
+            $short_code = $url_shortener->get_short_code($url);
+            
+            // If not cached, shorten the URL and cache it
+            if (!$short_code) {
+                $short_code = $url_shortener->shorten_url($url);
+            }
 
             if ($short_code) {
                 // Replace the original URL with the custom short URL in the content
