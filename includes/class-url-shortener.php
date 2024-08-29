@@ -25,7 +25,8 @@ class URL_Shortener {
             shortened_url_custom2 text NOT NULL,
             click_count bigint(20) NOT NULL DEFAULT 0,
             PRIMARY KEY (id),
-            UNIQUE KEY short_code (short_code)
+            UNIQUE KEY short_code (short_code),
+            KEY original_url (original_url(255))
         ) $charset_collate;";
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -35,6 +36,18 @@ class URL_Shortener {
     // Generate a unique shortcode for the URL
     public function generate_short_code($url) {
         return substr(md5($url . time()), 0, 8);
+    }
+
+    // Retrieve the short code if the URL is already shortened
+    public function get_short_code($url) {
+        global $wpdb;
+
+        $result = $wpdb->get_var($wpdb->prepare(
+            "SELECT short_code FROM $this->table_name WHERE original_url = %s",
+            $url
+        ));
+
+        return $result ? $result : false;
     }
 
     // Shorten the URL using both shorteners and store them in the database
@@ -87,7 +100,7 @@ class URL_Shortener {
             $api_url = "https://seturl.in/api?api={$api_token}&url={$long_url}&alias={$short_code}";
         } elseif ($shortener === 'custom2') {
             // Replace with the actual API endpoint of the second shortener
-            $api_url = "https://linkshortify.com/api?api={$api_token}&url={$long_url}&alias={$short_code}";
+            $api_url = "https://linkshortify/api?api={$api_token}&url={$long_url}&alias={$short_code}";
         }
 
         $result = @json_decode(file_get_contents($api_url), TRUE);
