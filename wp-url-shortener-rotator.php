@@ -13,10 +13,13 @@ if (!defined('ABSPATH')) {
 // Include necessary files
 require_once plugin_dir_path(__FILE__) . 'includes/class-url-shortener.php';
 
-// Enqueue admin styles
+// Enqueue admin styles only on the plugin's settings page
 add_action('admin_enqueue_scripts', 'wp_url_shortener_rotator_admin_styles');
-function wp_url_shortener_rotator_admin_styles() {
-    wp_enqueue_style('wp-url-shortener-rotator-admin', plugin_dir_url(__FILE__) . 'assets/css/admin-styles.css');
+function wp_url_shortener_rotator_admin_styles($hook_suffix) {
+    // Load CSS only on the URL Shortener Rotator settings page
+    if ($hook_suffix == 'settings_page_wp-url-shortener-settings') {
+        wp_enqueue_style('wp-url-shortener-rotator-admin', plugin_dir_url(__FILE__) . 'assets/css/admin-styles.css');
+    }
 }
 
 // Activation hook to create the database table
@@ -41,7 +44,7 @@ function wp_url_shortener_rotator_menu() {
 // Render the settings page
 function wp_url_shortener_rotator_settings_page() {
     ?>
-    <div class="wrap">
+    <div class="wrap wp-url-shortener-settings-page">
         <h1>URL Shortener Settings</h1>
         <form method="post" action="options.php">
             <?php
