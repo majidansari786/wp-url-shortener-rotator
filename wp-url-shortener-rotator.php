@@ -122,8 +122,8 @@ function append_shortened_links($content) {
 
     $url_shortener = new URL_Shortener($api_token_seturl, $api_token_custom2);
 
-    // Extract all links from the post content
-    preg_match_all('/<a href="(.*?)">/', $content, $matches);
+    // Refined regular expression to match only URLs within href attributes
+    preg_match_all('/<a[^>]+href=["\'](https?:\/\/[^"\']+)["\'][^>]*>/i', $content, $matches);
     $urls = $matches[1];
 
     if (!empty($urls)) {
