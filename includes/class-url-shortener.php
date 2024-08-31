@@ -100,7 +100,7 @@ class URL_Shortener {
             $api_url = "https://seturl.in/api?api={$api_token}&url={$long_url}&alias={$short_code}";
         } elseif ($shortener === 'custom2') {
             // Replace with the actual API endpoint of the second shortener
-            $api_url = "https://linkshortify/api?api={$api_token}&url={$long_url}&alias={$short_code}";
+            $api_url = "https://linkshortify.com/api?api={$api_token}&url={$long_url}&alias={$short_code}";
         }
 
         $result = @json_decode(file_get_contents($api_url), TRUE);
