@@ -71,7 +71,7 @@ function wp_url_shortener_rotator_settings_init() {
 
     add_settings_field(
         'api_token_seturl',
-        'SetURL API Token',
+        'Seturl API Token',
         'wp_url_shortener_rotator_api_token_seturl_render',
         'wp-url-shortener-settings',
         'wp_url_shortener_rotator_section'
