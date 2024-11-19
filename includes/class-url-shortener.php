@@ -16,6 +16,7 @@ class URL_Shortener {
         ];
     }
 
+    // Create the database table
     public function install() {
         global $wpdb;
         $charset_collate = $wpdb->get_charset_collate();
@@ -40,6 +41,19 @@ class URL_Shortener {
         dbDelta($sql);
     }
 
+    // Check if a short code exists for a URL
+    public function get_short_code($url) {
+        global $wpdb;
+
+        $result = $wpdb->get_var($wpdb->prepare(
+            "SELECT short_code FROM $this->table_name WHERE original_url = %s",
+            $url
+        ));
+
+        return $result ?: false;
+    }
+
+    // Shorten a URL using active shorteners
     public function shorten_url($url) {
         global $wpdb;
 
@@ -60,6 +74,7 @@ class URL_Shortener {
         return false;
     }
 
+    // Helper function to call a shortener's API
     private function shorten_with_api($url, $api_token, $shortener) {
         $long_url = urlencode($url);
         $short_code = $this->generate_short_code($url);
@@ -80,6 +95,7 @@ class URL_Shortener {
         return $result['status'] === 'success' ? $result['shortenedUrl'] : null;
     }
 
+    // Rotate URLs between active shorteners
     public function get_rotated_url($short_code) {
         global $wpdb;
 
@@ -112,6 +128,7 @@ class URL_Shortener {
         return false;
     }
 
+    // Generate a unique short code
     public function generate_short_code($url) {
         return substr(md5($url . time()), 0, 8);
     }
